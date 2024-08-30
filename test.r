@@ -10,10 +10,10 @@ set_script_dir = function(){
 if(sys.nframe() == 0) set_script_dir()
 
 
-source("helpers/mutr.r")
-source("helpers/test-mutr.r")
-source("../rargs.r")
+source("tests/mutr.r")
+source("tests/test-mutr.r")
+source("rargs.r")
 
 TEST_INIT()
-TEST_DIR("tests")
+TEST_FILE("tests/test-rargs.r")
 TEST_PRINT()
