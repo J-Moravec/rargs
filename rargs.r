@@ -1,10 +1,21 @@
-#' rargs.r
+# ---------------------------------------------------------------------------- #
+# rargs: Copy-pastable argument parser
+# version: 1.0.0
+# https://github.com/J-Moravec/rargs
+# ---------------------------------------------------------------------------- #
+
+
+#' Get a name of a script
 #'
-#' parse command line arguments
+#' Get the name of the script's filename when run through Rscript
+#'
+#' For instance, for a script `script.r` in the `folder` folder,
+#' it could be run as `Rscript folder/script.r`. In that case,
+#' the `get_scriptname` returns the `script.r`.
 get_scriptname = function(){
     args = commandArgs(FALSE)
 
-    file_arg = grep("--file=", args, fixed=TRUE, value=TRUE)
+    file_arg = grep("--file=", args, fixed=TRUE, value=TRUE)[1]
 
     # not run throught script
     if(length(file_arg) == 0)
@@ -14,7 +25,9 @@ get_scriptname = function(){
     }
 
 
-# TODO flag should be ignored for positional arguments
+#' Define an option
+#'
+#' This is a helper function to define an option
 opt = function(name, short = NULL, default = NULL, flag = FALSE){
     # if name starts with --, it is a long form
     # otherwise it is a positional argument
@@ -24,38 +37,43 @@ opt = function(name, short = NULL, default = NULL, flag = FALSE){
         name = substring(name, 3)
         }
 
-    if(flag)
+    if(flag && !is.null(long))
         default = FALSE
 
-    # TODO safety checks
     list("name" = name, "short" = short, "long" = long, "default" = default, "flag" = flag)
     }
 
 
-check_unknown = function(args, options){
-    args = grep("^-", args, value = TRUE)
-    opts = unlist(c(options$long, options$short))
-    unknown = args[!args %in% opts]
-
-    if(length(unknown) != 0)
-        stop("Unknown arguments: ", paste0(unknown, collapse = ","))
-    }
-
-
-split_short_form = function(x){
-    f = \(y){ if(grepl("^-[^-]", y)) paste0("-", strsplit(y, "")[[1]][-1]) else y}
-    lapply(x, f) |> unlist()
-    }
-
-
-short_to_long = function(args, options){
-    id = match(args, options$short, nomatch = 0)
-    args[id != 0] = unlist(options$long[id])
-    args
-    }
-
-
+#' Parse arguments
+#'
+#' A POSIX-compatible argument parser.
+#'
+#' @param args **optional** a character vector of arguments, if not provided the commnad-line
+#' arguments are obtained using the `commandArgs()` function.
+#' @param options a list of one or more options obtained from the `opt` helper function.
+#' @return a list of parsed arguments
 parse_args = function(args = NULL, options){
+
+    split_short_form = function(x){
+        f = \(y){ if(grepl("^-[^-]", y)) paste0("-", strsplit(y, "")[[1]][-1]) else y}
+        lapply(x, f) |> unlist()
+        }
+
+    short_to_long = function(args, options){
+        id = match(args, options$short, nomatch = 0)
+        args[id != 0] = unlist(options$long[id])
+        args
+        }
+
+    check_unknown = function(args, options){
+        args = grep("^-", args, value = TRUE)
+        opts = unlist(c(options$long, options$short))
+        unknown = args[!args %in% opts]
+
+        if(length(unknown) != 0)
+            stop("Unknown arguments: ", paste0(unknown, collapse = ","))
+        }
+
     if(is.null(args))
         args = commandArgs(TRUE)
 
