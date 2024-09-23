@@ -113,26 +113,6 @@ list(
 As per POSIX, anything after `--` is a positional argument.
 For instance, if `args = c("--", "--foo", "--bar")`, the positional arguments will be `--foo` and `--bar`, even though they start with `-`.
 
-## Examples (old versions)
+## Examples
 
-### v1 -- ncbi.r
-
-Script written for downloading and flattening archive from the NCBI genome database.
-
-**Supports:**
-
-* short and long arguments
-* concatenated short arguments (`-srk` -> `-s -r -k`)
-* all arguments are flags and do not consume additional arguments
-
-### v2 -- sm.r
-
-Make Sample Map for `GATK GenomicsDBImport`.
-The logic is only 3 lines in 150 line script but thats not the point.
-
-**Supports:**
-
-* short and long arguments -- but must have defined both long and short forms
-* arguments can be flags or consume a single argument
-
-Can be easily expanded to support more arguments or concatenated short forms.
+* [ncbi.r](https://github.com/J-Moravec/ncbi.r) a dependency-free script to download reference genomes from NCBI
