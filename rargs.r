@@ -1,6 +1,6 @@
 # ---------------------------------------------------------------------------- #
 # rargs: Copy-pastable argument parser
-# version: 1.0.0
+# version: 1.0.1
 # https://github.com/J-Moravec/rargs
 # ---------------------------------------------------------------------------- #
 
@@ -21,7 +21,7 @@ get_scriptname = function(){
     if(length(file_arg) == 0)
         return(NULL)
 
-    sub("^--file=", "", file_arg)
+    basename(sub("^--file=", "", file_arg))
     }
 
 
