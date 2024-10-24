@@ -13,15 +13,9 @@
 #' it could be run as `Rscript folder/script.r`. In that case,
 #' the `get_scriptname` returns the `script.r`.
 get_scriptname = function(){
-    args = commandArgs(FALSE)
-
-    file_arg = grep("--file=", args, fixed=TRUE, value=TRUE)[1]
-
-    # not run throught script
-    if(length(file_arg) == 0)
-        return(NULL)
-
-    basename(sub("^--file=", "", file_arg))
+    args = grep("--file=", commandArgs(FALSE), fixed = TRUE, value = TRUE)[1]
+    if(anyNA(args)) return(NULL)
+    basename(sub("^--file=", "", args))
     }
 
 
